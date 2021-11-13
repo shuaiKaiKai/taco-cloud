@@ -51,6 +51,11 @@ public class JdbcTacoRepository implements TacoRepository {
         return keyHolder.getKey().longValue();
     }
 
+    /**
+     *
+     * @param ingredient
+     * @param tacoId
+     */
     private void saveIngredientTotaco(Ingredient ingredient, long tacoId) {
         jdbc.update("insert into Taco_Ingredients (taco, ingredient) values (?, ?)", tacoId, ingredient.getId());
     }
