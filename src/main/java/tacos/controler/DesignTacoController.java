@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import tacos.data.dataApi.IngredientRepository;
+import tacos.data.dataApi.TacoRepository;
 import tacos.model.Ingredient;
+import tacos.model.Order;
 import tacos.model.Taco;
 
 import javax.validation.Valid;
@@ -21,14 +21,29 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequestMapping("/design")
 @Controller
+@SessionAttributes("order")
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
 
+    private final TacoRepository designRepo;
+
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo) {
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo) {
+        this.designRepo = designRepo;
         this.ingredientRepo = ingredientRepo;
     }
+
+    @ModelAttribute("order")
+    public Order order() {
+        return new Order();
+    }
+
+    @ModelAttribute("taco")
+    public Taco taco() {
+        return new Taco();
+    }
+
 
     //    @GetMapping
 //    public String showDesignForm(Model model) {
@@ -65,12 +80,14 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco design, Errors errors) {
+    public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order) {
         if (errors.hasErrors()) {
             return "design";
         }
-        log.info("Processing design:" + design);
+        Taco saved = designRepo.save(design);
+        order.setTaco(saved);
 
+        log.info("Processing design:" + design);
         return "redirect:/orders/current";
     }
 

@@ -41,4 +41,6 @@ public class Order {
     private String ccCVV;
 
     private Date placedAt;
+
+    private Taco taco;
 }

@@ -25,7 +25,7 @@ public class OrderController {
     @GetMapping("/current")
     public String orderForm(Model model) {
         // todo:先new一个，后续会从数据库中获取
-        model.addAttribute("order", new Order());
+        model.addAttribute("order", new Order(1l));
         return "orderForm";
     }
 
