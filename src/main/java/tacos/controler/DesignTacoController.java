@@ -76,6 +76,9 @@ public class DesignTacoController {
         for (Ingredient.Type type : types) {
             model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
         }
+        Taco taco = new Taco();
+        taco.setName("name");
+        model.addAttribute("design", taco);
         return "design";
     }
 
@@ -85,7 +88,7 @@ public class DesignTacoController {
             return "design";
         }
         Taco saved = designRepo.save(design);
-        order.setTaco(saved);
+        order.addDesign(saved);
 
         log.info("Processing design:" + design);
         return "redirect:/orders/current";
