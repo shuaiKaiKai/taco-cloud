@@ -5,7 +5,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 配置类，只做视图转发
+ * 视图控制器
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
