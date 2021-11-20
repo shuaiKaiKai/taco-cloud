@@ -3,16 +3,17 @@ package tacos.controler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import tacos.config.ParamsConfig;
 import tacos.data.dataApi.OrderRepository;
+import tacos.data.dataApi.TacoRepository;
 import tacos.model.Order;
+import tacos.model.Taco;
 
 @Slf4j
 @RequestMapping("/orders")
@@ -25,10 +26,13 @@ public class OrderController {
 
     private ParamsConfig paramsConfig;
 
+    private TacoRepository tacoRepo;
+
     @Autowired
-    public OrderController(OrderRepository orderRepo, ParamsConfig paramsConfig) {
+    public OrderController(OrderRepository orderRepo, ParamsConfig paramsConfig, TacoRepository tacoRepo) {
         this.orderRepo = orderRepo;
         this.paramsConfig = paramsConfig;
+        this.tacoRepo = tacoRepo;
     }
 
 
@@ -60,9 +64,26 @@ public class OrderController {
         return "redirect:/";
     }
 
-    @GetMapping(value = "/test")
-    public String test() {
-        int i = paramsConfig.getPageSize();
-        return "";
+    /**
+     * @param taco
+     * @return
+     */
+    @PostMapping(consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Taco postTaco(@RequestBody Taco taco) {
+        return tacoRepo.save(taco);
     }
+
+
+    /**
+     * 返回状态码200
+     * @return
+     */
+    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Integer> test() {
+        int i = paramsConfig.getPageSize();
+        return new ResponseEntity<Integer>(i, HttpStatus.OK);
+    }
+
+
 }
