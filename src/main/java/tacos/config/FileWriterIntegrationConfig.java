@@ -2,6 +2,7 @@ package tacos.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.Router;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.integration.channel.DirectChannel;
@@ -84,6 +85,8 @@ public class FileWriterIntegrationConfig {
      *
      * @return
      */
+    @Bean
+    @Router(inputChannel = "numberChannel")
     public AbstractMessageRouter evenOddRouter() {
         return new AbstractMessageRouter() {
             @Override
